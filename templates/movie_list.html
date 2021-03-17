@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Book List</h1>
+
+<a href="{% url 'add' %}">Add Movie</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Director</th>
+        <th scope="col">Cast</th>
+        <th scope="col">Release Date</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for movie in movie_list %}
+    <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{movie.name}}</td>
+        <td>{{movie.director}}</td>
+        <td>{{movie.cast}}</td>
+        <td>{{movie.release_date}}</td>
+        <td>
+            <a href="{% url 'update' pk=movie.id %}" >Edit</a>
+            <a href="{% url 'delete' pk=movie.id %}">Delete</a>
+        </td>
+    </tr>
+    {% empty %}
+    <p>There are no books in the library.</p>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
