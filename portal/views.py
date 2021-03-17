@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, FormView, CreateView, UpdateView, \
@@ -11,6 +12,11 @@ class HomeView(ListView):
     model = Movie
     queryset = Movie.objects.all()
     context_object_name = 'movie_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['results'] = Movie.objects.values('studio').annotate(count=Count('studio'))
+        return context
 
 
 class MovieAddView(CreateView):

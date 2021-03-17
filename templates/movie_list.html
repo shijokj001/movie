@@ -1,7 +1,54 @@
 {% extends "base.html" %}
-
+{% load static %}
+{% block script %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+{% endblock %}
 {% block content %}
-<h1>Book List</h1>
+<script type="text/javascript">
+        $(function () {
+        $('#chart_container').highcharts({
+        chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Studio Collection Overview'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Studios',
+        colorByPoint: true,
+        data: [
+          {% for cat in results %}
+            {
+            name: '{{ cat.studio }}',
+            y:{{ cat.count }}
+            },
+            {% endfor %}
+            ]
+    }]
+        });
+        });
+    </script>
+<h1>Movie List</h1>
 
 <a href="{% url 'add' %}">Add Movie</a>
 
@@ -11,7 +58,8 @@
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Director</th>
-        <th scope="col">Cast</th>
+        <th scope="col">Studio</th>
+        <th scope="col">Collection</th>
         <th scope="col">Release Date</th>
         <th scope="col"></th>
     </tr>
@@ -22,7 +70,8 @@
         <th scope="row">{{forloop.counter}}</th>
         <td>{{movie.name}}</td>
         <td>{{movie.director}}</td>
-        <td>{{movie.cast}}</td>
+        <td>{{movie.studio}}</td>
+        <td>{{movie.collection}}</td>
         <td>{{movie.release_date}}</td>
         <td>
             <a href="{% url 'update' pk=movie.id %}" >Edit</a>
@@ -34,5 +83,6 @@
     {% endfor %}
     </tbody>
 </table>
+    <div id="chart_container" style="height: 300px"></div>
 
 {% endblock %}
